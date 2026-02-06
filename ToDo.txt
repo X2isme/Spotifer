@@ -1,0 +1,5 @@
+Make a music player and a playlist section
+
+Make a playlist creator / editor
+
+make a artist adder / creator
