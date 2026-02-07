@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spotifer Web Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --background: #0f111a;
+        --surface: #191d2b;
+        --surface-alt: #232840;
+        --accent: #3ddc97;
+        --accent-dark: #2bb77b;
+        --text-primary: #f4f7ff;
+        --text-secondary: #c2c7d6;
+        --danger: #ff6b6b;
+        --shadow: 0 24px 70px rgba(15, 17, 26, 0.35);
+      }
+
+      [data-theme='light'] {
+        color-scheme: light;
+        --background: #f4f6fb;
+        --surface: #ffffff;
+        --surface-alt: #e9edf7;
+        --accent: #4a66f0;
+        --accent-dark: #3249c5;
+        --text-primary: #1d2238;
+        --text-secondary: #5f6780;
+        --danger: #e04f5f;
+        --shadow: 0 24px 70px rgba(32, 35, 46, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--background);
+        color: var(--text-primary);
+      }
+
+      .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 32px;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 2vw + 1rem, 2.6rem);
+      }
+
+      header p {
+        margin: 4px 0 0;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-weight: 600;
+        background: var(--surface-alt);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button.primary {
+        background: var(--accent);
+        color: #0c111c;
+      }
+
+      button.primary:hover {
+        background: var(--accent-dark);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(260px, 320px) 1fr;
+        gap: 24px;
+      }
+
+      .card {
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .search input {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 1px solid transparent;
+        background: var(--surface-alt);
+        color: var(--text-primary);
+        font-size: 0.95rem;
+      }
+
+      .playlist {
+        margin-top: 20px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .playlist-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px;
+        border-radius: 16px;
+        background: var(--surface-alt);
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+
+      .playlist-item.active {
+        border-color: var(--accent);
+      }
+
+      .playlist-item span {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .now-playing {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 24px;
+      }
+
+      .now-playing h2 {
+        margin: 0 0 16px;
+      }
+
+      .track-card {
+        background: linear-gradient(135deg, var(--surface-alt), transparent);
+        border-radius: 22px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .track-meta {
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .progress {
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--accent);
+        transition: width 0.4s ease;
+      }
+
+      .queue {
+        display: grid;
+        gap: 12px;
+      }
+
+      .queue-item {
+        padding: 14px 18px;
+        border-radius: 16px;
+        background: var(--surface-alt);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .queue-item small {
+        color: var(--text-secondary);
+      }
+
+      .cta {
+        margin-top: 12px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .stats {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+      }
+
+      .stat {
+        background: var(--surface-alt);
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.3rem;
+      }
+
+      .stat span {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .now-playing {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-theme="dark">
+      <header>
+        <div>
+          <h1>Spotifer</h1>
+          <p>Curated listening sessions for focus, flow, and night drives.</p>
+        </div>
+        <div class="actions">
+          <button id="themeToggle">Toggle Theme</button>
+          <button class="primary" id="mixButton">Start a Fresh Mix</button>
+        </div>
+      </header>
+
+      <section class="layout">
+        <aside class="card">
+          <div class="search">
+            <input id="searchInput" type="text" placeholder="Search playlists" />
+          </div>
+          <div class="playlist" id="playlist"></div>
+        </aside>
+
+        <main class="card">
+          <div class="now-playing">
+            <div>
+              <h2>Now Playing</h2>
+              <div class="track-card" id="trackCard">
+                <div>
+                  <h3 id="trackTitle">Loading...</h3>
+                  <p id="trackArtist"></p>
+                </div>
+                <div class="track-meta">
+                  <span id="trackMood"></span>
+                  <span id="trackTime"></span>
+                </div>
+                <div class="progress">
+                  <span id="trackProgress"></span>
+                </div>
+                <div class="cta">
+                  <button class="primary" id="playButton">Play</button>
+                  <button id="skipButton">Skip</button>
+                  <button id="loveButton">Save</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2>Up Next</h2>
+              <div class="queue" id="queue"></div>
+            </div>
+          </div>
+
+          <div class="stats" id="stats"></div>
+        </main>
+      </section>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
